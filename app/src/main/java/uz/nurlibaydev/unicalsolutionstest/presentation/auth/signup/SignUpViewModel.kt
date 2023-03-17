@@ -20,14 +20,30 @@ class SignUpViewModel @Inject constructor(
     private val repository: AuthRepository,
 ) : ViewModel() {
 
-    private val _signupFlow = MutableStateFlow<Resource<FirebaseUser>?>(null)
+    private val _signupFlow = MutableStateFlow<Resource<FirebaseUser>?>(Resource.Loading)
     val signupFlow: StateFlow<Resource<FirebaseUser>?> = _signupFlow
+
+    private val _addUserFlow = MutableStateFlow<Resource<String>?>(Resource.Loading)
+    val addUserFlow: StateFlow<Resource<String>?> = _addUserFlow
+    init {
+        if (repository.currentUser != null) {
+            _signupFlow.value = Resource.Success(repository.currentUser!!)
+        }
+    }
 
     fun signUp(email: String, password: String) {
         viewModelScope.launch {
             _signupFlow.value = Resource.Loading
             val result = repository.signup(email, password)
             _signupFlow.value = result
+        }
+    }
+
+    fun addUserToDb(name: String, email: String, password: String) {
+        viewModelScope.launch {
+            _addUserFlow.value = Resource.Loading
+            val result = repository.addUserToDb(name, email, password)
+            _addUserFlow.value = result
         }
     }
 }

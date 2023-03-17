@@ -37,19 +37,18 @@ class AuthRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun logout() {
-        firebaseAuth.signOut()
-    }
-
-    fun addUserToFireStore(name: String): Resource<String> {
+    override suspend fun addUserToDb(name: String, email: String, password: String): Resource<String> {
         val user = User(firebaseAuth.currentUser!!.uid, name, firebaseAuth.currentUser?.email!!)
-        firebaseFireStore.collection(USERS).document(user.id).set(user)
         return try {
-            firebaseFireStore.collection(USERS).document(user.id).set(user)
-            Resource.Success("Success")
+            firebaseFireStore.collection(USERS).document(user.id).set(user).await()
+            Resource.Success("User added to FireStore")
         } catch (e: Exception) {
             e.printStackTrace()
             Resource.Failure(e)
         }
+    }
+
+    override fun logout() {
+        firebaseAuth.signOut()
     }
 }

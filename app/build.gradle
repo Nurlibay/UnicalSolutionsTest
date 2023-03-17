@@ -66,10 +66,6 @@ dependencies {
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
     implementation 'androidx.fragment:fragment-ktx:1.5.5'
 
-    /** koin */
-    implementation "io.insert-koin:koin-android:3.3.3"
-    implementation "io.insert-koin:koin-android-ext:3.0.2"
-
     /** Timber */
     implementation 'com.jakewharton.timber:timber:5.0.1'
 
