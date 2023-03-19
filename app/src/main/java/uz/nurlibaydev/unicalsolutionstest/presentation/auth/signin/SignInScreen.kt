@@ -43,7 +43,7 @@ class SignInScreen : Fragment(R.layout.screen_signin) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.getAllUsers(provideDeviceId())
+        viewModel.getAllUsers()
         observerUsers()
         setupObserver()
         binding.apply {
@@ -110,6 +110,7 @@ class SignInScreen : Fragment(R.layout.screen_signin) {
         progressBar.isVisible = isLoading
         tilEmail.isEnabled = !isLoading
         tilPassword.isEnabled = !isLoading
+        btnSignIn.isEnabled = !isLoading
     }
 
     private fun validate(): Boolean {

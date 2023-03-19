@@ -14,6 +14,6 @@ interface AuthRepository {
     suspend fun signup(email: String, password: String): Resource<FirebaseUser>
     suspend fun addUserToDb(deviceId: String, name: String, email: String, password: String): Resource<String>
 
-    suspend fun getAllUsers(deviceId: String): Resource<List<User>>
+    suspend fun getAllUsers(): Resource<List<User>>
     fun logout()
 }

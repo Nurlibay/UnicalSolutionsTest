@@ -100,6 +100,7 @@ class SignUpScreen : Fragment(R.layout.screen_signup) {
         tilName.isEnabled = !isLoading
         tilEmail.isEnabled = !isLoading
         tilPassword.isEnabled = !isLoading
+        btnSignUp.isEnabled = !isLoading
     }
 
     private fun validate(): Boolean {

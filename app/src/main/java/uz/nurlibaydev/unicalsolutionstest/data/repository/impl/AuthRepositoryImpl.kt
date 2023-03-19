@@ -49,16 +49,16 @@ class AuthRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getAllUsers(deviceId: String): Resource<List<User>> {
+    override suspend fun getAllUsers(): Resource<List<User>> {
         val users = mutableListOf<User>()
         return try {
             firebaseFireStore.collection(USERS).get()
                 .addOnSuccessListener {
-                    val user = it.documents.map { doc ->
+                    val result = it.documents.map { doc ->
                         doc.toObject(User::class.java)!!
                     }
-                    users.addAll(user)
-                }
+                    users.addAll(result)
+                }.await()
             Resource.Success(users)
         } catch (e: Exception) {
             e.printStackTrace()

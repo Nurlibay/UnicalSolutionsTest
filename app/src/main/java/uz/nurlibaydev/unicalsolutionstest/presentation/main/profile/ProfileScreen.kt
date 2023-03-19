@@ -72,7 +72,7 @@ class ProfileScreen : Fragment(R.layout.screen_profile) {
                         showMessage(it.exception.toString())
                     }
                     is Resource.Success -> {
-                        showMessage(it.result.toString())
+                        showMessage("Image link added tp firestore!")
                         showLoading(false)
                     }
                     else -> {
@@ -111,6 +111,7 @@ class ProfileScreen : Fragment(R.layout.screen_profile) {
 
     private fun showLoading(isLoading: Boolean) = binding.apply {
         progressBar.isVisible = isLoading
+        fabAddPhoto.isEnabled = !isLoading
     }
 
     private fun pickImageFromGallery() {

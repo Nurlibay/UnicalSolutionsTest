@@ -35,10 +35,10 @@ class SignInViewModel @Inject constructor(
     private val _users = MutableStateFlow<Resource<List<User>>?>(Resource.Loading)
     val users: StateFlow<Resource<List<User>>?> = _users
 
-    fun getAllUsers(deviceId: String) {
+    fun getAllUsers() {
         viewModelScope.launch {
             _users.value = Resource.Loading
-            val result = repository.getAllUsers(deviceId)
+            val result = repository.getAllUsers()
             _users.value = result
         }
     }
