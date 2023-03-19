@@ -1,8 +1,6 @@
 package uz.nurlibaydev.unicalsolutionstest.presentation.auth.signup
 
-import android.annotation.SuppressLint
 import android.os.Bundle
-import android.provider.Settings
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment

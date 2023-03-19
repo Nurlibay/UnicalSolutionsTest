@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_auth"
-    app:startDestination="@id/signInScreen">
+    app:startDestination="@id/splashScreen">
 
     <fragment
         android:id="@+id/signInScreen"
@@ -33,11 +33,30 @@
             app:destination="@id/mainContainer"
             app:launchSingleTop="true"
             app:popUpTo="@id/nav_auth"
-            app:popUpToInclusive="true" />
+            app:popUpToInclusive="true"
+
+            />
     </fragment>
     <fragment
         android:id="@+id/mainContainer"
         android:name="uz.nurlibaydev.unicalsolutionstest.presentation.main.MainContainer"
         android:label="MainContainer"
         tools:layout="@layout/screen_container" />
+    <fragment
+        android:id="@+id/splashScreen"
+        android:name="uz.nurlibaydev.unicalsolutionstest.presentation.SplashScreen"
+        android:label="SplashScreen">
+        <action
+            android:id="@+id/action_splashScreen_to_signInScreen"
+            app:destination="@id/signInScreen"
+            app:launchSingleTop="true"
+            app:popUpTo="@id/nav_auth"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_splashScreen_to_mainContainer"
+            app:destination="@id/mainContainer"
+            app:launchSingleTop="true"
+            app:popUpTo="@id/nav_auth"
+            app:popUpToInclusive="true" />
+    </fragment>
 </navigation>
