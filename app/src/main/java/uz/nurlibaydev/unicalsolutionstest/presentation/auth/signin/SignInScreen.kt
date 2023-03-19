@@ -1,7 +1,6 @@
 package uz.nurlibaydev.unicalsolutionstest.presentation.auth.signin
 
 import android.os.Bundle
-import android.provider.Settings
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -13,10 +12,13 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import uz.nurlibaydev.unicalsolutionstest.R
+import uz.nurlibaydev.unicalsolutionstest.data.pref.SharedPref
 import uz.nurlibaydev.unicalsolutionstest.databinding.ScreenSigninBinding
 import uz.nurlibaydev.unicalsolutionstest.utils.Constants
 import uz.nurlibaydev.unicalsolutionstest.utils.Resource
+import uz.nurlibaydev.unicalsolutionstest.utils.provideDeviceId
 import uz.nurlibaydev.unicalsolutionstest.utils.showMessage
+import javax.inject.Inject
 
 /**
  *  Created by Nurlibay Koshkinbaev on 17/03/2023 17:29
@@ -29,8 +31,20 @@ class SignInScreen : Fragment(R.layout.screen_signin) {
     private val navController by lazy(LazyThreadSafetyMode.NONE) { findNavController() }
     private val viewModel: SignInViewModel by viewModels()
 
+    @Inject
+    lateinit var pref: SharedPref
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        if (pref.isSigned) {
+            navController.navigate(SignInScreenDirections.actionSignInScreenToMainContainer())
+        }
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        viewModel.getAllUsers(provideDeviceId())
+        observerUsers()
         setupObserver()
         binding.apply {
             tvSignUp.setOnClickListener {
@@ -39,6 +53,33 @@ class SignInScreen : Fragment(R.layout.screen_signin) {
             btnSignIn.setOnClickListener {
                 if (validate()) {
                     viewModel.login(etEmail.text.toString(), etPassword.text.toString())
+                }
+            }
+        }
+    }
+
+    private fun observerUsers() {
+        lifecycleScope.launch {
+            viewModel.users.collectLatest {
+                when (it) {
+                    is Resource.Failure -> {
+                        showLoading(false)
+                        showMessage(it.exception.toString())
+                    }
+                    Resource.Loading -> {
+                        showLoading(true)
+                    }
+                    is Resource.Success -> {
+                        it.result.forEach { user ->
+                            if (user.id == provideDeviceId()) {
+                                navController.navigate(SignInScreenDirections.actionSignInScreenToMainContainer())
+                            }
+                        }
+                        showLoading(false)
+                    }
+                    else -> {
+                        showLoading(false)
+                    }
                 }
             }
         }

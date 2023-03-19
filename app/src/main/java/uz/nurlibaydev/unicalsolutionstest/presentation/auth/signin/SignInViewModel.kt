@@ -7,6 +7,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import uz.nurlibaydev.unicalsolutionstest.data.models.User
 import uz.nurlibaydev.unicalsolutionstest.data.repository.AuthRepository
 import uz.nurlibaydev.unicalsolutionstest.utils.Resource
 import javax.inject.Inject
@@ -28,6 +29,17 @@ class SignInViewModel @Inject constructor(
             _loginFlow.value = Resource.Loading
             val result = repository.login(email, password)
             _loginFlow.value = result
+        }
+    }
+
+    private val _users = MutableStateFlow<Resource<List<User>>?>(Resource.Loading)
+    val users: StateFlow<Resource<List<User>>?> = _users
+
+    fun getAllUsers(deviceId: String) {
+        viewModelScope.launch {
+            _users.value = Resource.Loading
+            val result = repository.getAllUsers(deviceId)
+            _users.value = result
         }
     }
 }

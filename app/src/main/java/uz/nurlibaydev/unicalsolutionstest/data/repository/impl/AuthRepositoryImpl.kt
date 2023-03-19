@@ -10,7 +10,6 @@ import uz.nurlibaydev.unicalsolutionstest.utils.Constants.USERS
 import uz.nurlibaydev.unicalsolutionstest.utils.Resource
 import javax.inject.Inject
 
-
 class AuthRepositoryImpl @Inject constructor(
     private val firebaseAuth: FirebaseAuth,
     private val firebaseFireStore: FirebaseFirestore,
@@ -38,11 +37,29 @@ class AuthRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun addUserToDb(deviceId: String, name: String, email: String, password: String): Resource<String> {
+    override suspend fun addUserToDb(deviceId: String, name: String, email: String, password: String):
+        Resource<String> {
         val user = User(deviceId, name, firebaseAuth.currentUser?.email!!)
         return try {
             firebaseFireStore.collection(USERS).document(user.id).set(user).await()
             Resource.Success("User added to FireStore")
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Resource.Failure(e)
+        }
+    }
+
+    override suspend fun getAllUsers(deviceId: String): Resource<List<User>> {
+        val users = mutableListOf<User>()
+        return try {
+            firebaseFireStore.collection(USERS).get()
+                .addOnSuccessListener {
+                    val user = it.documents.map { doc ->
+                        doc.toObject(User::class.java)!!
+                    }
+                    users.addAll(user)
+                }
+            Resource.Success(users)
         } catch (e: Exception) {
             e.printStackTrace()
             Resource.Failure(e)

@@ -16,6 +16,7 @@ import kotlinx.coroutines.launch
 import uz.nurlibaydev.unicalsolutionstest.R
 import uz.nurlibaydev.unicalsolutionstest.databinding.ScreenProfileBinding
 import uz.nurlibaydev.unicalsolutionstest.utils.Resource
+import uz.nurlibaydev.unicalsolutionstest.utils.provideDeviceId
 import uz.nurlibaydev.unicalsolutionstest.utils.showMessage
 
 /**
@@ -33,7 +34,7 @@ class ProfileScreen : Fragment(R.layout.screen_profile) {
             fabAddPhoto.setOnClickListener {
                 pickImageFromGallery()
             }
-            viewModel.getImageFromDatabase()
+            viewModel.getImageFromDatabase(provideDeviceId())
             observerGetImage()
         }
     }
@@ -48,7 +49,7 @@ class ProfileScreen : Fragment(R.layout.screen_profile) {
                         showMessage(it.exception.toString())
                     }
                     is Resource.Success -> {
-                        viewModel.addImageToFireStore(it.result)
+                        viewModel.addImageToFireStore(provideDeviceId(), it.result)
                         observerFireStore()
                         showMessage("Image uploaded to Storage successfully!")
                         showLoading(false)

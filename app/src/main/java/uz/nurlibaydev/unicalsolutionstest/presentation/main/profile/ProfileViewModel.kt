@@ -34,10 +34,10 @@ class ProfileViewModel @Inject constructor(
     private val _addImageFireStore = MutableStateFlow<Resource<Boolean>?>(null)
     val addImageFireStore: StateFlow<Resource<Boolean>?> = _addImageFireStore
 
-    fun addImageToFireStore(downloadUrl: Uri) {
+    fun addImageToFireStore(deviceId: String, downloadUrl: Uri) {
         viewModelScope.launch {
             _addImageFireStore.value = Resource.Loading
-            val result = repository.addImageUrlToFireStore(downloadUrl)
+            val result = repository.addImageUrlToFireStore(deviceId, downloadUrl)
             _addImageFireStore.value = result
         }
     }
@@ -45,10 +45,10 @@ class ProfileViewModel @Inject constructor(
     private val _getImageFromDatabase = MutableStateFlow<Resource<String>?>(null)
     val getImageFromDatabase: StateFlow<Resource<String>?> = _getImageFromDatabase
 
-    fun getImageFromDatabase() {
+    fun getImageFromDatabase(deviceId: String) {
         viewModelScope.launch {
             _getImageFromDatabase.value = Resource.Loading
-            val result = repository.getImageUrlFromFireStore()
+            val result = repository.getImageUrlFromFireStore(deviceId)
             _getImageFromDatabase.value = result
         }
     }

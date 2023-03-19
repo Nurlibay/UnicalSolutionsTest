@@ -10,4 +10,5 @@ object Constants {
     // Image fields
     const val IMAGE_URL = "imageUrl"
     const val CREATED_AT = "createdAt"
+    const val SHARED_PREFS = "shared_pref"
 }

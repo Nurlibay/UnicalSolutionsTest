@@ -109,9 +109,6 @@ dependencies {
     implementation "ru.ldralighieri.corbind:corbind-recyclerview:$corbind_version"
     implementation "ru.ldralighieri.corbind:corbind-viewpager2:$corbind_version"
 
-    //image picker
-    implementation 'com.github.dhaval2404:imagepicker:2.1'
-
     //Image Loading Lib
     implementation 'com.github.bumptech.glide:glide:4.14.2'
 

@@ -1,6 +1,7 @@
 package uz.nurlibaydev.unicalsolutionstest.data.repository
 
 import com.google.firebase.auth.FirebaseUser
+import uz.nurlibaydev.unicalsolutionstest.data.models.User
 import uz.nurlibaydev.unicalsolutionstest.utils.Resource
 
 /**
@@ -12,5 +13,7 @@ interface AuthRepository {
     suspend fun login(email: String, password: String): Resource<FirebaseUser>
     suspend fun signup(email: String, password: String): Resource<FirebaseUser>
     suspend fun addUserToDb(deviceId: String, name: String, email: String, password: String): Resource<String>
+
+    suspend fun getAllUsers(deviceId: String): Resource<List<User>>
     fun logout()
 }

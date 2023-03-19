@@ -17,6 +17,7 @@ import uz.nurlibaydev.unicalsolutionstest.R
 import uz.nurlibaydev.unicalsolutionstest.databinding.ScreenSignupBinding
 import uz.nurlibaydev.unicalsolutionstest.utils.Constants.MIN_PASSWORD_REQUIRED_LENGTH
 import uz.nurlibaydev.unicalsolutionstest.utils.Resource
+import uz.nurlibaydev.unicalsolutionstest.utils.provideDeviceId
 import uz.nurlibaydev.unicalsolutionstest.utils.showMessage
 
 /**
@@ -45,7 +46,6 @@ class SignUpScreen : Fragment(R.layout.screen_signup) {
         }
     }
 
-    @SuppressLint("HardwareIds")
     private fun setupObserverSignUp() = binding.apply {
         lifecycleScope.launch {
             viewModel.signupFlow.collectLatest {
@@ -57,12 +57,8 @@ class SignUpScreen : Fragment(R.layout.screen_signup) {
                     }
                     is Resource.Success -> {
                         showLoading(false)
-                        val mId: String = Settings.Secure.getString(
-                            requireActivity().contentResolver,
-                            Settings.Secure.ANDROID_ID,
-                        )
                         viewModel.addUserToDb(
-                            mId,
+                            provideDeviceId(),
                             etName.text.toString(),
                             etEmail.text.toString(),
                             etPassword.text.toString(),

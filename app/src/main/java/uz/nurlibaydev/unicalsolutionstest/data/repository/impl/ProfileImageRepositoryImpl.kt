@@ -36,9 +36,9 @@ class ProfileImageRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun addImageUrlToFireStore(downloadUrl: Uri): AddImageUrlToFireStoreResponse {
+    override suspend fun addImageUrlToFireStore(deviceId: String, downloadUrl: Uri): AddImageUrlToFireStoreResponse {
         return try {
-            db.collection(USERS).document(auth.currentUser!!.uid).update(
+            db.collection(USERS).document(deviceId).update(
                 mapOf(
                     IMAGE_URL to downloadUrl,
                     CREATED_AT to FieldValue.serverTimestamp(),
@@ -50,9 +50,9 @@ class ProfileImageRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getImageUrlFromFireStore(): GetImageUrlFromFireStoreResponse {
+    override suspend fun getImageUrlFromFireStore(deviceId: String): GetImageUrlFromFireStoreResponse {
         return try {
-            val imageUrl = db.collection(USERS).document(auth.uid.toString()).get().await().getString(IMAGE_URL)
+            val imageUrl = db.collection(USERS).document(deviceId).get().await().getString(IMAGE_URL)
             Resource.Success(imageUrl!!)
         } catch (e: Exception) {
             Resource.Failure(e)
