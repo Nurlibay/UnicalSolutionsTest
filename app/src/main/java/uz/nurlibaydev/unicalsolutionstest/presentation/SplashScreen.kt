@@ -7,12 +7,10 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import by.kirich1409.viewbindingdelegate.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import uz.nurlibaydev.unicalsolutionstest.R
-import uz.nurlibaydev.unicalsolutionstest.databinding.ScreenSplashBinding
 import uz.nurlibaydev.unicalsolutionstest.presentation.auth.signin.SignInViewModel
 import uz.nurlibaydev.unicalsolutionstest.utils.Resource
 import uz.nurlibaydev.unicalsolutionstest.utils.provideDeviceId
@@ -26,7 +24,6 @@ import uz.nurlibaydev.unicalsolutionstest.utils.showMessage
 @AndroidEntryPoint
 class SplashScreen : Fragment(R.layout.screen_splash) {
 
-    private val binding by viewBinding<ScreenSplashBinding>()
     private val navController by lazy(LazyThreadSafetyMode.NONE) { findNavController() }
     private val viewModel: SignInViewModel by viewModels()
 
@@ -46,10 +43,16 @@ class SplashScreen : Fragment(R.layout.screen_splash) {
                     Resource.Loading -> {
                     }
                     is Resource.Success -> {
-                        it.result.forEach { user ->
+                        it.result.forEachIndexed { index, user ->
                             if (user.id == provideDeviceId()) {
                                 navController.navigate(SplashScreenDirections.actionSplashScreenToMainContainer())
                             }
+                            if (it.result.size - 1 == index && user.id != provideDeviceId()) {
+                                navController.navigate(SplashScreenDirections.actionSplashScreenToSignInScreen())
+                            }
+                        }
+                        if (it.result.isEmpty()) {
+                            navController.navigate(SplashScreenDirections.actionSplashScreenToSignInScreen())
                         }
                     }
                     else -> {
