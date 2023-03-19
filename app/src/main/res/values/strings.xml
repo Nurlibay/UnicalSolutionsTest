@@ -14,4 +14,6 @@
     <string name="enter_full_name">Enter full name</string>
     <string name="phone_number">Phone Number</string>
     <string name="tvName">Full Name</string>
+    <string name="profile_screen">Profile Screen</string>
+
 </resources>

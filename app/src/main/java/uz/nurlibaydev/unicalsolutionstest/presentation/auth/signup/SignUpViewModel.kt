@@ -25,6 +25,7 @@ class SignUpViewModel @Inject constructor(
 
     private val _addUserFlow = MutableStateFlow<Resource<String>?>(Resource.Loading)
     val addUserFlow: StateFlow<Resource<String>?> = _addUserFlow
+
     init {
         if (repository.currentUser != null) {
             _signupFlow.value = Resource.Success(repository.currentUser!!)
@@ -39,10 +40,10 @@ class SignUpViewModel @Inject constructor(
         }
     }
 
-    fun addUserToDb(name: String, email: String, password: String) {
+    fun addUserToDb(deviceId: String, name: String, email: String, password: String) {
         viewModelScope.launch {
             _addUserFlow.value = Resource.Loading
-            val result = repository.addUserToDb(name, email, password)
+            val result = repository.addUserToDb(deviceId, name, email, password)
             _addUserFlow.value = result
         }
     }

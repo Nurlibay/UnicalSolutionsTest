@@ -1,6 +1,8 @@
 package uz.nurlibaydev.unicalsolutionstest.presentation.auth.signup
 
+import android.annotation.SuppressLint
 import android.os.Bundle
+import android.provider.Settings
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -43,6 +45,7 @@ class SignUpScreen : Fragment(R.layout.screen_signup) {
         }
     }
 
+    @SuppressLint("HardwareIds")
     private fun setupObserverSignUp() = binding.apply {
         lifecycleScope.launch {
             viewModel.signupFlow.collectLatest {
@@ -54,7 +57,12 @@ class SignUpScreen : Fragment(R.layout.screen_signup) {
                     }
                     is Resource.Success -> {
                         showLoading(false)
+                        val mId: String = Settings.Secure.getString(
+                            requireActivity().contentResolver,
+                            Settings.Secure.ANDROID_ID,
+                        )
                         viewModel.addUserToDb(
+                            mId,
                             etName.text.toString(),
                             etEmail.text.toString(),
                             etPassword.text.toString(),
@@ -69,7 +77,7 @@ class SignUpScreen : Fragment(R.layout.screen_signup) {
         }
     }
 
-    private fun setupObserverAddUser(){
+    private fun setupObserverAddUser() {
         lifecycleScope.launch {
             viewModel.addUserFlow.collectLatest {
                 when (it) {

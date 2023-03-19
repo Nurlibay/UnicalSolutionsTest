@@ -10,6 +10,7 @@ import uz.nurlibaydev.unicalsolutionstest.utils.Constants.USERS
 import uz.nurlibaydev.unicalsolutionstest.utils.Resource
 import javax.inject.Inject
 
+
 class AuthRepositoryImpl @Inject constructor(
     private val firebaseAuth: FirebaseAuth,
     private val firebaseFireStore: FirebaseFirestore,
@@ -37,8 +38,8 @@ class AuthRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun addUserToDb(name: String, email: String, password: String): Resource<String> {
-        val user = User(firebaseAuth.currentUser!!.uid, name, firebaseAuth.currentUser?.email!!)
+    override suspend fun addUserToDb(deviceId: String, name: String, email: String, password: String): Resource<String> {
+        val user = User(deviceId, name, firebaseAuth.currentUser?.email!!)
         return try {
             firebaseFireStore.collection(USERS).document(user.id).set(user).await()
             Resource.Success("User added to FireStore")
