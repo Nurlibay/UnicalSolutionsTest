@@ -24,8 +24,8 @@ import uz.nurlibaydev.unicalsolutionstest.utils.showMessage
 @AndroidEntryPoint
 class SplashScreen : Fragment(R.layout.screen_splash) {
 
-    private val navController by lazy(LazyThreadSafetyMode.NONE) { findNavController() }
     private val viewModel: SignInViewModel by viewModels()
+    private val navController by lazy(LazyThreadSafetyMode.NONE) { findNavController() }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -43,16 +43,18 @@ class SplashScreen : Fragment(R.layout.screen_splash) {
                     Resource.Loading -> {
                     }
                     is Resource.Success -> {
-                        it.result.forEachIndexed { index, user ->
-                            if (user.id == provideDeviceId()) {
-                                navController.navigate(SplashScreenDirections.actionSplashScreenToMainContainer())
+                        val users = it.result
+                        if (users.isNotEmpty()) {
+                            users.forEach { user ->
+                                if (user.id == provideDeviceId()) {
+                                    navController.navigate(R.id.action_splashScreen_to_mainContainer)
+                                    return@collectLatest
+                                } else if (user.id != provideDeviceId() && users.last() == user) {
+                                    navController.navigate(R.id.action_splashScreen_to_signInScreen)
+                                }
                             }
-                            if (it.result.size - 1 == index && user.id != provideDeviceId()) {
-                                navController.navigate(SplashScreenDirections.actionSplashScreenToSignInScreen())
-                            }
-                        }
-                        if (it.result.isEmpty()) {
-                            navController.navigate(SplashScreenDirections.actionSplashScreenToSignInScreen())
+                        } else {
+                            navController.navigate(R.id.action_splashScreen_to_signInScreen)
                         }
                     }
                     else -> {
