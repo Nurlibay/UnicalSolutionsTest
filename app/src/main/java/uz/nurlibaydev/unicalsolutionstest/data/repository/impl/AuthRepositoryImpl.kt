@@ -1,6 +1,9 @@
 package uz.nurlibaydev.unicalsolutionstest.data.repository.impl
 
+import com.google.firebase.FirebaseNetworkException
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
+import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
@@ -21,6 +24,12 @@ class AuthRepositoryImpl @Inject constructor(
         return try {
             val result = firebaseAuth.signInWithEmailAndPassword(email, password).await()
             Resource.Success(result.user!!)
+        } catch (e: FirebaseNetworkException) {
+            e.printStackTrace()
+            Resource.Failure(Exception("No internet connection"))
+        } catch (e: FirebaseAuthInvalidCredentialsException) {
+            e.printStackTrace()
+            Resource.Failure(Exception("Invalid email"))
         } catch (e: Exception) {
             e.printStackTrace()
             Resource.Failure(e)
@@ -31,6 +40,15 @@ class AuthRepositoryImpl @Inject constructor(
         return try {
             val result = firebaseAuth.createUserWithEmailAndPassword(email, password).await()
             Resource.Success(result.user!!)
+        } catch (e: FirebaseAuthUserCollisionException) {
+            e.printStackTrace()
+            Resource.Failure(Exception("User with this email already exist"))
+        } catch (e: FirebaseNetworkException) {
+            e.printStackTrace()
+            Resource.Failure(Exception("No internet connection"))
+        } catch (e: FirebaseAuthInvalidCredentialsException) {
+            e.printStackTrace()
+            Resource.Failure(Exception("Invalid email"))
         } catch (e: Exception) {
             e.printStackTrace()
             Resource.Failure(e)
