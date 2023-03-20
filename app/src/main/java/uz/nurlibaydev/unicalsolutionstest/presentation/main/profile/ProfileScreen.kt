@@ -72,7 +72,7 @@ class ProfileScreen : Fragment(R.layout.screen_profile) {
                         showMessage(it.exception.toString())
                     }
                     is Resource.Success -> {
-                        showMessage("Image link added tp firestore!")
+                        showMessage("Image link added to firestore!")
                         showLoading(false)
                     }
                     else -> {
@@ -93,12 +93,14 @@ class ProfileScreen : Fragment(R.layout.screen_profile) {
                         showMessage(it.exception.toString())
                     }
                     is Resource.Success -> {
-                        Glide
-                            .with(this@ProfileScreen)
-                            .load(it.result)
-                            .centerCrop()
-                            .into(binding.imgProfile)
-                        showMessage("Image got from storage!")
+                        if (it.result.isNotEmpty()) {
+                            Glide
+                                .with(this@ProfileScreen)
+                                .load(it.result)
+                                .centerCrop()
+                                .into(binding.imgProfile)
+                            showMessage("Image got from storage!")
+                        }
                         showLoading(false)
                     }
                     else -> {
